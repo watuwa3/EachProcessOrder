@@ -15,20 +15,14 @@ namespace EachProcessOrder
 
         public LoginWindow()
         {
-
             InitializeComponent();
-
-            // フォームのアイコンを設定
-            //const string iconFileName = @".\Koken.ico";
-            //this.Icon = new System.Drawing.Icon(iconFileName);
-
-            s_DBManager = DBManager.GetInstance();
         }
 
         // 画面表示
         private void LoginWindow_Load(object sender, EventArgs e)
         {
             // DB設定はConfigDB.xmlで行う
+            s_DBManager = DBManager.GetInstance();
 #if false
             // Oracleバージョンドロップダウン設定
             OracleVerComboBox.Items.AddRange(new object[] { "Oracle 10g", "Oracle 11g" });

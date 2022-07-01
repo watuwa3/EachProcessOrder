@@ -18,8 +18,8 @@
     {
         // メッセージ定義
         // タイトル
-        public static readonly string MSG_TITLE_LOGIN_WINDOW = "工程別手配調査アプリ 認証画面";
-        public static readonly string MSG_TITLE_WINDOW = "工程別手配調査アプリ画面";
+        public static readonly string MSG_TITLE_LOGIN_WINDOW = "工程別 手配状況調査アプリ 認証画面";
+        public static readonly string MSG_TITLE_WINDOW = "工程別 手配状況調査アプリ画面";
         public static readonly string MSG_TITLE_SUCCESS = "調査完了";
         public static readonly string MSG_TITLE_PROCESS = "処理中";
         public static readonly string MSG_TITLE_ERROR = "エラー";
