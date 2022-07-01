@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<DBConfigData>
+  <!-- 接続先: 品質保証システム開発用サーバー (QADEVSV) -->
+  <User>KOKEN_QA</User>             <!-- Oracle サーバーのパスワード -->
+  <Passwd>;@=8BTG8</Passwd>         <!-- 暗号化パスワード -->
+  <Protocol>tcp</Protocol>          <!-- 通信プロトコル -->
+  <Host>QADEVSV</Host>              <!-- Oracle サーバーのインスタンスがあるホスト名または IPv4 アドレス -->
+  <Port>1521</Port>                 <!-- Oracle サーバーの受信ポート -->
+  <ServiceName>KTEST</ServiceName>  <!-- サービス名 -->
+  <Schema>KOKEN_QA</Schema>         <!-- スキーマ -->
+</DBConfigData>
