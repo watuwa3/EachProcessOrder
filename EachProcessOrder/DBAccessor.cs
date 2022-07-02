@@ -32,15 +32,14 @@ namespace EachProcessOrder
         public string DecPasswd { get; set; }       // 解除後パスワード
     }
 
-
     public class DBAccessor
     {
-        private OracleConnection s_OracleConnection = null;
-        private string s_MySQLConnection = null;
-        private DBConfigData s_DBConfigData = null;
+        private static OracleConnection s_OracleConnection = null;
+        private static MySqlConnection s_MySQLConnection = null;
+        private static DBConfigData s_DBConfigData = null;
 
         // DB設定ファイル解析
-        public ProcessErrorType analyzeDbConfigFile(ref string configFileName)
+        public static ProcessErrorType analyzeDbConfigFile(string configFileName)
         {
             try
             {
@@ -83,7 +82,7 @@ namespace EachProcessOrder
         }
 
         // スキーマ名設定
-        public string GetSchema()
+        public static string GetSchema()
         {
             if (s_DBConfigData.TargetDB == "Oracle")
             {
@@ -96,7 +95,7 @@ namespace EachProcessOrder
         }
 
         // DBオープン
-        public ProcessErrorType Open()
+        public static ProcessErrorType DBOpen()
         {
             if (s_DBConfigData.TargetDB == "Oracle")
             {
@@ -111,81 +110,121 @@ namespace EachProcessOrder
             return ProcessErrorType.DatabaseConnectionFailed;
         }
 
-        // 
-        public ProcessErrorType MySQLOpen(string server, string database, string uid, string pwd, string charset)
+        // Oracleデータベースのオープン処理
+        private static ProcessErrorType OracleOpen(string userid, string password, string protocol, string host, int port, string servicename)
         {
-            // MySQLへの接続情報
-            s_MySQLConnection = string.Format("Server={0};Database={1};Uid={2};Pwd={3};Charset={4}", server, database, uid, pwd, charset);
-            return ProcessErrorType.None;
-        }
-
-        // 
-        public ProcessErrorType OracleOpen(string userId, string password, string protocol, string host, int port, string serviceName)
-        {
-            string dataSource =
-                "(DESCRIPTION=" +
-                "(ADDRESS=" +
-                "(PROTOCOL=" + protocol + ")" +
-                "(HOST=" + host + ")" +
-                "(PORT=" + port + ")" + ")" +
-                "(CONNECT_DATA=" + "(SERVICE_NAME=" + serviceName + ")" + ")" +
-                ")";
+            // 挿入文字列と逐次的文字列を組み合わせた$@
+            var datasource = $@"
+                (DESCRIPTION=(ADDRESS=(PROTOCOL={protocol})(HOST={host})(PORT={port})) 
+                (CONNECT_DATA=(SERVICE_NAME={servicename})))";
+            var cnn = $@"
+                User Id={userid};
+                Password={password};
+                Data Source={datasource}";
             try
             {
                 s_OracleConnection = new OracleConnection();
-                if (s_OracleConnection != null)
-                {
-                    string connectString = "User Id=" + userId + "; "
-                                    + "Password=" + password + "; "
-                                    + "Data Source=" + dataSource;
-                    s_OracleConnection.ConnectionString = connectString;
-
-                    s_OracleConnection.Open();
-                    return ProcessErrorType.None;
-                }
+                s_OracleConnection.ConnectionString = cnn;
+                s_OracleConnection.Open();
+                return ProcessErrorType.None;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message.ToString());
+                return ProcessErrorType.DatabaseConnectionFailed;
+            }
+        }
+
+        // MySQLデータベースのオープン処理
+        private static ProcessErrorType MySQLOpen(string server, string database, string uid, string pwd, string charset)
+        {
+            // MySQLへの接続情報
+            try
+            {
+                // 挿入文字列と逐次的文字列を組み合わせた$@
+                var cnn = $@"Server={server};Database={database};Uid={uid};Pwd={pwd};Charset={charset}";
+                s_MySQLConnection = new MySqlConnection(cnn);
+                s_MySQLConnection.Open();
+                return ProcessErrorType.None;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString());
+                return ProcessErrorType.DatabaseConnectionFailed;
+            }
+        }
+
+        // DBクローズ
+        public static ProcessErrorType DBClose()
+        {
+            if (s_DBConfigData.TargetDB == "Oracle")
+            {
+                return OracleClose();
+            }
+            else
+            {
+                return MySQLClose();
             }
             return ProcessErrorType.DatabaseConnectionFailed;
         }
 
-        // DBクローズ
-        public bool OracleClose()
+        // Oracleデータベースのクローズ
+        private static ProcessErrorType OracleClose()
         {
-            // クローズ
             try
             {
                 if (s_OracleConnection != null)
                 {
                     s_OracleConnection.Close();
                     s_OracleConnection = null;
-                    return true;
                 }
+                return ProcessErrorType.None;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message.ToString());
+                return ProcessErrorType.DatabaseConnectionFailed;
             }
-            return false;
+        }
+
+        // MySQLデータベースのクローズ
+        private static ProcessErrorType MySQLClose()
+        {
+            try
+            {
+                if (s_MySQLConnection != null)
+                {
+                    s_MySQLConnection.Close();
+                    s_MySQLConnection = null;
+                }
+                return ProcessErrorType.None;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString());
+                return ProcessErrorType.DatabaseConnectionFailed;
+            }
         }
 
         // データ取得
-        public DataTable GetDataTable(string select, string from, string where, string orderby)
+        public static DataTable GetDataTable(string select, string from, string where, string orderby)
         {
             DataTable dt = new DataTable();
             try
             {
                 if (s_DBConfigData.TargetDB == "Oracle")
                 {
-                    OracleDataReader reader = GetOracleData(select, from, where, orderby);
-                    dt.Load(reader);
+                    using (OracleDataReader reader = GetOracleData(select, from, where, orderby))
+                    {
+                        dt.Load(reader);
+                    }
                 }
                 else
                 {
-                    MySqlDataAdapter myDa = GetMySQLData(select, from, where, orderby);
-                    myDa.Fill(dt);
+                    using (MySqlDataAdapter myDa = GetMySQLData(select, from, where, orderby))
+                    {
+                        if (myDa != null) myDa.Fill(dt);
+                    }
                 }
             }
             catch (Exception ex)
@@ -195,7 +234,7 @@ namespace EachProcessOrder
             return dt;
         }
 
-        private MySqlDataAdapter GetMySQLData(string select, string from, string where, string orderby)
+        private static MySqlDataAdapter GetMySQLData(string select, string from, string where, string orderby)
         {
             string sql = sqlString(select, from, where, orderby);
             // データ取得開始
@@ -204,7 +243,7 @@ namespace EachProcessOrder
         }
 
         // データ取得
-        private OracleDataReader GetOracleData(string select, string from, string where, string orderby)
+        private static OracleDataReader GetOracleData(string select, string from, string where, string orderby)
         {
             string sql = sqlString(select, from, where, orderby);
             // データ取得開始
@@ -224,7 +263,7 @@ namespace EachProcessOrder
             return null;
         }
 
-        private string sqlString(string select, string from, string where, string orderby)
+        private static string sqlString(string select, string from, string where, string orderby)
         {
             // SQL組み立て
             string sql = "SELECT ";
@@ -234,21 +273,5 @@ namespace EachProcessOrder
             sql += (orderby == null || orderby == "") ? "" : " ORDER BY " + orderby;
             return sql;
         }
-
-        // データ存在チェック
-        public bool IsDataExsit(string targetValue, string targetColumn, string select, string from, string where)
-        {
-            DataTable dt = GetDataTable(select, from, where, "");
-            var str = dt.Rows[0][targetColumn].ToString();
-            if (str == targetValue)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
     }
-
 }

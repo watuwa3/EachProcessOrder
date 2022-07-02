@@ -9,7 +9,6 @@ using System.Windows.Forms;
 namespace EachProcessOrder
 {
     using static Common;
-
     public partial class LoginWindow : Form
     {
         private string s_configFileName;
@@ -65,7 +64,6 @@ namespace EachProcessOrder
         // OKボタンクリック
         private void OkButton_Click(object sender, EventArgs e)
         {
-
             // 入力チェック
             if(UserIdTextBox.Text.Length == 0)
             {
@@ -77,11 +75,21 @@ namespace EachProcessOrder
                 MessageBox.Show(MSG_PASSWORD_NOT_ENTERED, MSG_TITLE_ERROR, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-                
-            // ユーザー情報・パスワードの存在チェック
-            ProcessErrorType ret = s_DBManager.CheckUserInfoValid(UserIdTextBox.Text, PasswordTextBox.Text);
-            if( ret == ProcessErrorType.None)
+            // データベースオープン
+            if (DBManager.DBOpen() != ProcessErrorType.None)
             {
+                MessageBox.Show(MSG_DATABESE_CONNECTION_FAILURE);
+                this.Close();
+            };
+
+            // ユーザー情報・パスワードの存在チェック
+            var ret = DBManager.CheckUserInfoValid(UserIdTextBox.Text, PasswordTextBox.Text);
+
+            if ( ret == ProcessErrorType.None)
+            {
+                // データベースクローズ
+                DBManager.DBClose();
+
                 // ユーザーIDを記録するチェックボックスがONの場合は
                 // AppConfigに保存する
                 if (UserInfoResistCheckBox.Checked)
@@ -95,17 +103,25 @@ namespace EachProcessOrder
             }
             else{
                 // 入力に不備 or 認証情報取得失敗
-                if(ret == ProcessErrorType.UserIdNotExist)
+                if (ret == ProcessErrorType.UserIdNotExist)
                 {
                     // ユーザーIDが存在しない
                     MessageBox.Show(MSG_USERID_NOT_CORRECT, MSG_TITLE_ERROR, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                else if(ret == ProcessErrorType.PasswordNotExist)
+                else if (ret == ProcessErrorType.PasswordNotExist)
                 {
-                    // パスワードが存在しない(間違っている)
+                    // パスワードが存在しない
                     MessageBox.Show(MSG_PASSWORD_NOT_CORRECT, MSG_TITLE_ERROR, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                else if(ret == ProcessErrorType.ConfigDbFileNotExist)
+                else if (ret == ProcessErrorType.PasswordFaild)
+                {
+                    // パスワードが間違っている
+                    MessageBox.Show(MSG_PASSWORD_FAILD, MSG_TITLE_ERROR, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    PasswordTextBox.SelectionStart = 0;
+                    PasswordTextBox.SelectionLength = PasswordTextBox.Text.Length;
+                    PasswordTextBox.Focus();
+                }
+                else if (ret == ProcessErrorType.ConfigDbFileNotExist)
                 {
                     // DB設定ファイルが存在しない
                     MessageBox.Show(MSG_DATABESE_CONFIG_NOT_EXSIST, MSG_TITLE_ERROR, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -115,6 +131,8 @@ namespace EachProcessOrder
                     // DB接続失敗
                     MessageBox.Show(MSG_DATABESE_CONNECTION_FAILURE, MSG_TITLE_ERROR, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+                // データベースクローズ
+                DBManager.DBClose();
             }
         }
 

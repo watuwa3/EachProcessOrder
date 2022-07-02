@@ -12,6 +12,7 @@
         DatabaseNoData,                 // DBにデータが存在しない
         UserIdNotExist,                 // ユーザーIDが存在しない
         PasswordNotExist,               // パスワードが存在しない
+        PasswordFaild,                  // パスワードが間違っている
     }
 
     class Common
@@ -36,13 +37,15 @@
 
         // エラーメッセージ
         public static readonly string MSG_USERID_NOT_ENTERED = "ユーザーIDが入力されていません";
-        public static readonly string MSG_PASSWORD_NOT_ENTERED = "パスワードが入力されていません";
         public static readonly string MSG_USERID_NOT_CORRECT = "ユーザーIDが間違っています";
+        public static readonly string MSG_PASSWORD_NOT_ENTERED = "パスワードが入力されていません";
         public static readonly string MSG_PASSWORD_NOT_CORRECT = "パスワードが間違っています";
+        public static readonly string MSG_PASSWORD_FAILD = "パスワードが間違っています";
 
         public static readonly string MSG_DATABESE_CONFIG_NOT_EXSIST = "データベース設定ファイルが存在しません\n設定ファイルを配置しアプリを再起動してください";
         public static readonly string MSG_FILE_CONFIG_NOT_EXSIST = "ファイル設定ファイルが存在しません\n設定ファイルを配置しアプリを再起動してください";
         public static readonly string MSG_DATABESE_CONNECTION_FAILURE = "データベースへの接続に失敗しました";
+        public static readonly string MSG_DATABESE_CLOSE_FAILURE = "データベースへの切断に失敗しました";
 
     }
 
