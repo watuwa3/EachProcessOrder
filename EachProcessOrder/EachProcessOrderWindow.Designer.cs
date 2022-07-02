@@ -60,9 +60,10 @@
             // 
             this.cmbKTGCD.Font = new System.Drawing.Font("MS UI Gothic", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.cmbKTGCD.FormattingEnabled = true;
-            this.cmbKTGCD.Location = new System.Drawing.Point(12, 47);
+            this.cmbKTGCD.Location = new System.Drawing.Point(9, 38);
+            this.cmbKTGCD.Margin = new System.Windows.Forms.Padding(2);
             this.cmbKTGCD.Name = "cmbKTGCD";
-            this.cmbKTGCD.Size = new System.Drawing.Size(180, 31);
+            this.cmbKTGCD.Size = new System.Drawing.Size(136, 26);
             this.cmbKTGCD.TabIndex = 0;
             // 
             // chart
@@ -71,7 +72,8 @@
             this.chart.ChartAreas.Add(chartArea1);
             legend1.Name = "Legend1";
             this.chart.Legends.Add(legend1);
-            this.chart.Location = new System.Drawing.Point(12, 84);
+            this.chart.Location = new System.Drawing.Point(9, 67);
+            this.chart.Margin = new System.Windows.Forms.Padding(2);
             this.chart.Name = "chart";
             series1.ChartArea = "ChartArea1";
             series1.Color = System.Drawing.Color.MediumSlateBlue;
@@ -85,7 +87,7 @@
             series2.Name = "Series2";
             this.chart.Series.Add(series1);
             this.chart.Series.Add(series2);
-            this.chart.Size = new System.Drawing.Size(776, 421);
+            this.chart.Size = new System.Drawing.Size(582, 337);
             this.chart.TabIndex = 1;
             this.chart.Text = "chart1";
             // 
@@ -98,7 +100,8 @@
             this.helpMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 39);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(600, 33);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -108,27 +111,27 @@
             this.getTehaiMenuItem,
             this.toolStripMenuItem2,
             this.closeMenuItem});
-            this.fileMenuItem.Font = new System.Drawing.Font("Yu Gothic UI", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.fileMenuItem.Font = new System.Drawing.Font("游ゴシック Light", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.fileMenuItem.Name = "fileMenuItem";
-            this.fileMenuItem.Size = new System.Drawing.Size(124, 35);
+            this.fileMenuItem.Size = new System.Drawing.Size(127, 29);
             this.fileMenuItem.Text = "ファイル (&F)";
             // 
             // getTehaiMenuItem
             // 
             this.getTehaiMenuItem.Name = "getTehaiMenuItem";
             this.getTehaiMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
-            this.getTehaiMenuItem.Size = new System.Drawing.Size(326, 36);
+            this.getTehaiMenuItem.Size = new System.Drawing.Size(282, 30);
             this.getTehaiMenuItem.Text = "手配データ取得";
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(323, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(279, 6);
             // 
             // closeMenuItem
             // 
             this.closeMenuItem.Name = "closeMenuItem";
-            this.closeMenuItem.Size = new System.Drawing.Size(326, 36);
+            this.closeMenuItem.Size = new System.Drawing.Size(282, 30);
             this.closeMenuItem.Text = "閉じる (&C)";
             // 
             // dispMenuItem
@@ -139,55 +142,55 @@
             this.dispSMenuItem,
             this.toolStripMenuItem1,
             this.refreshMenuItem});
-            this.dispMenuItem.Font = new System.Drawing.Font("Yu Gothic UI", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.dispMenuItem.Font = new System.Drawing.Font("游ゴシック Light", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.dispMenuItem.Name = "dispMenuItem";
-            this.dispMenuItem.Size = new System.Drawing.Size(108, 35);
+            this.dispMenuItem.Size = new System.Drawing.Size(91, 29);
             this.dispMenuItem.Text = "表示 (&V)";
             // 
             // dispLMenuItem
             // 
             this.dispLMenuItem.Name = "dispLMenuItem";
-            this.dispLMenuItem.Size = new System.Drawing.Size(314, 36);
+            this.dispLMenuItem.Size = new System.Drawing.Size(269, 30);
             this.dispLMenuItem.Text = "大 (&L)";
             // 
             // dispMMenuItem
             // 
             this.dispMMenuItem.Name = "dispMMenuItem";
-            this.dispMMenuItem.Size = new System.Drawing.Size(314, 36);
+            this.dispMMenuItem.Size = new System.Drawing.Size(269, 30);
             this.dispMMenuItem.Text = "中 (&M)";
             // 
             // dispSMenuItem
             // 
             this.dispSMenuItem.Name = "dispSMenuItem";
-            this.dispSMenuItem.Size = new System.Drawing.Size(314, 36);
+            this.dispSMenuItem.Size = new System.Drawing.Size(269, 30);
             this.dispSMenuItem.Text = "小 (&S)";
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(311, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(266, 6);
             // 
             // refreshMenuItem
             // 
             this.refreshMenuItem.Name = "refreshMenuItem";
             this.refreshMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
-            this.refreshMenuItem.Size = new System.Drawing.Size(314, 36);
+            this.refreshMenuItem.Size = new System.Drawing.Size(269, 30);
             this.refreshMenuItem.Text = "最新の状態に更新";
             // 
             // helpMenuItem
             // 
             this.helpMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.varsionInfoMenuItem});
-            this.helpMenuItem.Font = new System.Drawing.Font("Yu Gothic UI", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.helpMenuItem.Font = new System.Drawing.Font("游ゴシック Light", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.helpMenuItem.Name = "helpMenuItem";
-            this.helpMenuItem.Size = new System.Drawing.Size(120, 35);
+            this.helpMenuItem.Size = new System.Drawing.Size(112, 29);
             this.helpMenuItem.Text = "ヘルプ (&H)";
             // 
             // varsionInfoMenuItem
             // 
             this.varsionInfoMenuItem.Name = "varsionInfoMenuItem";
             this.varsionInfoMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F12;
-            this.varsionInfoMenuItem.Size = new System.Drawing.Size(281, 36);
+            this.varsionInfoMenuItem.Size = new System.Drawing.Size(260, 30);
             this.varsionInfoMenuItem.Text = "バージョン情報";
             // 
             // statusStrip1
@@ -195,26 +198,28 @@
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusLabel});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 497);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 398);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(800, 37);
+            this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 10, 0);
+            this.statusStrip1.Size = new System.Drawing.Size(600, 29);
             this.statusStrip1.TabIndex = 3;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // statusLabel
             // 
-            this.statusLabel.Font = new System.Drawing.Font("Yu Gothic UI", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.statusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(220, 31);
+            this.statusLabel.Size = new System.Drawing.Size(173, 24);
             this.statusLabel.Text = "toolStripStatusLabel";
             // 
             // btnTehai
             // 
             this.btnTehai.AutoSize = true;
-            this.btnTehai.Font = new System.Drawing.Font("MS UI Gothic", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.btnTehai.Location = new System.Drawing.Point(491, 47);
+            this.btnTehai.Font = new System.Drawing.Font("游ゴシック", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnTehai.Location = new System.Drawing.Point(368, 38);
+            this.btnTehai.Margin = new System.Windows.Forms.Padding(2);
             this.btnTehai.Name = "btnTehai";
-            this.btnTehai.Size = new System.Drawing.Size(297, 33);
+            this.btnTehai.Size = new System.Drawing.Size(223, 35);
             this.btnTehai.TabIndex = 4;
             this.btnTehai.Text = "手配データ取得 (F5)";
             this.btnTehai.UseVisualStyleBackColor = true;
@@ -223,16 +228,17 @@
             // 
             this.cmbKTCD.Font = new System.Drawing.Font("MS UI Gothic", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.cmbKTCD.FormattingEnabled = true;
-            this.cmbKTCD.Location = new System.Drawing.Point(198, 47);
+            this.cmbKTCD.Location = new System.Drawing.Point(148, 38);
+            this.cmbKTCD.Margin = new System.Windows.Forms.Padding(2);
             this.cmbKTCD.Name = "cmbKTCD";
-            this.cmbKTCD.Size = new System.Drawing.Size(287, 31);
+            this.cmbKTCD.Size = new System.Drawing.Size(216, 26);
             this.cmbKTCD.TabIndex = 5;
             // 
             // EachProcessOrderWindow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 534);
+            this.ClientSize = new System.Drawing.Size(600, 427);
             this.Controls.Add(this.cmbKTCD);
             this.Controls.Add(this.btnTehai);
             this.Controls.Add(this.statusStrip1);
@@ -240,9 +246,11 @@
             this.Controls.Add(this.cmbKTGCD);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "EachProcessOrderWindow";
             this.Text = "工程別 手配状況確認アプリ";
             this.Load += new System.EventHandler(this.EachProcessOrderWindow_Load);
+            this.SizeChanged += new System.EventHandler(this.EachProcessOrderWindow_ResizeEnd);
             ((System.ComponentModel.ISupportInitialize)(this.chart)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

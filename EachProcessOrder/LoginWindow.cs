@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Configuration;
 using System.Diagnostics;
 using System.Reflection;
@@ -11,6 +12,7 @@ namespace EachProcessOrder
 
     public partial class LoginWindow : Form
     {
+        private string s_configFileName;
         private DBManager s_DBManager;
 
         public LoginWindow()
@@ -22,7 +24,14 @@ namespace EachProcessOrder
         private void LoginWindow_Load(object sender, EventArgs e)
         {
             // DB設定はConfigDB.xmlで行う
-            s_DBManager = DBManager.GetInstance();
+            s_configFileName = Path.Combine(Directory.GetCurrentDirectory(), configFileName);
+            if (!File.Exists(s_configFileName))
+            {
+                // ログイン画面を閉じてチェックシート発行画面を表示する
+                MessageBox.Show(MSG_DATABESE_CONFIG_NOT_EXSIST);
+                this.Close();
+            }
+            s_DBManager = DBManager.GetInstance(s_configFileName);
 #if false
             // Oracleバージョンドロップダウン設定
             OracleVerComboBox.Items.AddRange(new object[] { "Oracle 10g", "Oracle 11g" });

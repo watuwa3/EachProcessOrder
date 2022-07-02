@@ -17,8 +17,8 @@ namespace EachProcessOrder
             Application.SetCompatibleTextRenderingDefault(false);
 
             // ログイン画面表示
-             LoginWindow loginWindow = new LoginWindow();
-             DialogResult dialogResult = loginWindow.ShowDialog();
+            LoginWindow loginWindow = new LoginWindow();
+            DialogResult dialogResult = loginWindow.ShowDialog();
 
             // ログイン処理が正常に完了したか?
             if (dialogResult == DialogResult.OK)

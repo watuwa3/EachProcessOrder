@@ -1,11 +1,18 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <DBConfigData>
-  <!-- 接続先: 品質保証システム開発用サーバー (QADEVSV) -->
-  <User>KOKEN_QA</User>             <!-- Oracle サーバーのパスワード -->
-  <Passwd>;@=8BTG8</Passwd>         <!-- 暗号化パスワード -->
+  <TargetDB>MySQL</TargetDB>
+  <!-- Oracle -->
+  <UserID>KOKEN_7</UserID>         	<!-- Oracle サーバーのパスワード -->
+  <Passwd>[`]XbT-</Passwd>          <!-- 暗号化パスワード -->
   <Protocol>tcp</Protocol>          <!-- 通信プロトコル -->
-  <Host>QADEVSV</Host>              <!-- Oracle サーバーのインスタンスがあるホスト名または IPv4 アドレス -->
+  <Host>192.168.96.213</Host>       <!-- Oracle サーバーのインスタンスがあるホスト名または IPv4 アドレス -->
   <Port>1521</Port>                 <!-- Oracle サーバーの受信ポート -->
   <ServiceName>KTEST</ServiceName>  <!-- サービス名 -->
-  <Schema>KOKEN_QA</Schema>         <!-- スキーマ -->
+  <Schema>KOKEN_7</Schema>         	<!-- スキーマ -->
+  <!-- MySQL定義 -->
+  <MyServer>localhost</MyServer>
+  <MyDatabase>koken_5</MyDatabase>
+  <MyUser>root</MyUser>
+  <MyPass>]R`T[Zh</MyPass>
+  <MyCharset>utf8</MyCharset>
 </DBConfigData>

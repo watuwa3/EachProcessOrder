@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Data;
+using System.Linq;
 using Oracle.ManagedDataAccess.Client;
 
 namespace EachProcessOrder
 {
     public class DBManager
     {
-        private static DBManager s_DBManager = new DBManager();
+        private static DBManager s_DBManager;
         private static DBAccessor s_DBAccessor;
-        private static DBConfigData s_DBConfigData;
-
-        private string s_SchemaName;
+        private static string s_configFileName;
 
         private const string s_TableNameKM6010 = "KM6010";
         private const string s_TableNameKM6020 = "KM6020";
@@ -21,26 +20,22 @@ namespace EachProcessOrder
         private const string s_TableNameM0200 = "M0200";
         private const string s_TableNameM0500 = "M0500";
         private const string s_TableNameM0600 = "M0600";
+        private string s_SchemaName;
 
         // コンストラクタ
         private DBManager()
         {
-            s_DBAccessor = new DBAccessor();
-
             // DB設定ファイル解析
-            s_DBConfigData = s_DBAccessor.analyzeDbConfigFile();
-
-            // スキーマ名設定
-            s_SchemaName = null;
-            if (s_DBConfigData.Schema != null)
-            {
-                s_SchemaName = s_DBConfigData.Schema + ".";
-            }
+            s_DBAccessor = new DBAccessor();
+            s_DBAccessor.analyzeDbConfigFile(ref s_configFileName);
+            s_SchemaName = s_DBAccessor.GetSchema();
         }
 
         // インスタンス取得
-        public static DBManager GetInstance()
+        public static DBManager GetInstance(string configFileName)
         {
+            s_configFileName = configFileName;
+            s_DBManager = new DBManager();
             return s_DBManager;
         }
 
@@ -60,11 +55,6 @@ namespace EachProcessOrder
                 // DB設定ファイルが存在しない
 
                 // Open
-                if (s_DBAccessor.OracleOpen(s_DBConfigData.User, s_DBConfigData.EncPasswd, s_DBConfigData.Protocol,
-                    s_DBConfigData.Host, s_DBConfigData.Port, s_DBConfigData.ServiceName) == ProcessErrorType.DatabaseConnectionFailed)
-                {
-                    return ret;
-                }
 
                 // Close
                 s_DBAccessor.OracleClose();
@@ -80,12 +70,25 @@ namespace EachProcessOrder
             return ret;
         }
 
+        public ProcessErrorType DBOpen()
+        {
+            return s_DBAccessor.Open();
+        }
+
+        // 工程グループマスタ取得
+        public void SetM0400(ref DataSet ds)
+        {
+            DataTable dt = s_DBAccessor.GetDataTable("", "M0400", "KTGCD in ('WL','MM','MP','BE')","KTGCD");
+            ds.Tables.Add(dt);
+            ds.Tables[ds.Tables.Count - 1].TableName = "M0400";
+        }
+
         // 得意先コード存在チェック
         public bool IsTkCdExsit(string tkCd)
         {
             if (tkCd == null) return false;
             string tableName = s_SchemaName + s_TableNameM0200;
-            return IsDataExsit(tkCd, "TKCD", null, tableName, null);
+            return s_DBAccessor.IsDataExsit(tkCd, "TKCD", null, tableName, null);
         }
 
         // 部品番号存在チェック
@@ -93,77 +96,33 @@ namespace EachProcessOrder
         {
             if (compHmCd == null) return false;
             string tableName = s_SchemaName + s_TableNameM0500;
-            return IsDataExsit(compHmCd, "HMCD", null, tableName, null);
+            return s_DBAccessor.IsDataExsit(compHmCd, "HMCD", null, tableName, null);
         }
-
-        // データ存在チェック
-        private bool IsDataExsit(string targetValue, string targetColumn, string select, string from, string where)
-        {
-            bool ret = false;
-
-            if (s_DBAccessor != null)
-            {
-                // Open
-                {
-                    // データ取得
-                    OracleDataReader readDataReader = s_DBAccessor.GetOracleData(select, from, where);
-
-                    // データ存在チェック
-                    if (readDataReader != null)
-                    {
-                        while (readDataReader.Read())
-                        {
-                            if (targetValue == readDataReader[targetColumn].ToString())
-                            {
-                                ret = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return ret;
-        }
-
-
-
 
         // ユーザID, パスワード確認
         public ProcessErrorType CheckUserInfoValid(string userName, string password)
         {
             // DBオープン
-            if (s_DBAccessor.OracleOpen(s_DBConfigData.User, s_DBConfigData.EncPasswd, s_DBConfigData.Protocol,
-                s_DBConfigData.Host, s_DBConfigData.Port, s_DBConfigData.ServiceName) != ProcessErrorType.None)
+            if (s_DBAccessor.Open() != ProcessErrorType.None)
             {
                 return ProcessErrorType.DatabaseConnectionFailed;
             }
             // ユーザーID確認
             string sqlWhere = "TANCD" + " = " + "'" + userName.ToUpper() + "'";
             //   -> M0010  - 担当者コード に存在しているIDか
-            if (!IsDataExsit(userName, "TANCD", null, s_SchemaName + "M0010", sqlWhere))
+            if (!s_DBAccessor.IsDataExsit(userName, "TANCD", null, s_SchemaName + "M0010", sqlWhere))
             {
                 s_DBAccessor.OracleClose();
                 return ProcessErrorType.UserIdNotExist;
             }
             // パスワード確認
             //   -> M0010 - ユーザーID に紐づいているパスワードと一致しているか
-            OracleDataReader readData = s_DBAccessor.GetOracleData(null, s_SchemaName + "M0010", sqlWhere);
-            if (readData != null)
+            DataTable dt = s_DBAccessor.GetDataTable(null, s_SchemaName + "M0010", sqlWhere, "");
+            if (dt != null)
             {
-                bool passwordExsit = false;
-                while (readData.Read())
+                // パスワードが一致しているかを調べる
+                if (dt.AsEnumerable().Any(n => n["PASSWD"] == password))
                 {
-                    if (password == readData["PASSWD"].ToString())
-                    {
-                        // パスワードが一致している
-                        passwordExsit = true;
-                        break;
-                    }
-                }
-                if (!passwordExsit)
-                {
-                    // パスワードが一致していない
                     s_DBAccessor.OracleClose();
                     return ProcessErrorType.PasswordNotExist;
                 }
@@ -173,12 +132,9 @@ namespace EachProcessOrder
                 s_DBAccessor.OracleClose();
                 return ProcessErrorType.PasswordNotExist;
             }
-
             // DB切断
             s_DBAccessor.OracleClose();
-
             return ProcessErrorType.None;
-
         }
     }
 }

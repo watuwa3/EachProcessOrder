@@ -16,6 +16,7 @@
 
     class Common
     {
+        public static readonly string configFileName = "ConfigDB.xml";
         // メッセージ定義
         // タイトル
         public static readonly string MSG_TITLE_LOGIN_WINDOW = "工程別 手配状況調査アプリ 認証画面";
