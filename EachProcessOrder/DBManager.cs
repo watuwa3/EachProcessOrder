@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 using Oracle.ManagedDataAccess.Client;
 
 namespace EachProcessOrder
@@ -33,21 +34,34 @@ namespace EachProcessOrder
         // データベースクローズ
         public static ProcessErrorType DBClose() { return DBAccessor.DBClose(); }
 
-        // 工程グループマスタ取得
+        // 工程グループマスタ(M0400)の取得 (関係ありそうな工程Gコードのみ取得)
         public static void SetM0400(ref DataSet ds)
         {
-            DataTable dt = DBAccessor.GetDataTable("KTGCD, KTGSEQ, KTGNM, KTRNM", "M0400", "KTGCD in ('WL','MM','MP','BE')","KTGCD");
+            var where = "KTGCD in ('WL','MM','MP','BE')";
+            DataTable dt = DBAccessor.GetDataTable("KTGCD, KTGSEQ, KTGNM, KTRNM", "M0400", where,"KTGCD");
             ds.Tables.Add(dt);
             ds.Tables[ds.Tables.Count - 1].TableName = "M0400";
         }
 
-        // 工程名称マスタ取得
+        // 工程名称マスタ(M0410)の取得
         public static void SetM0410(ref DataSet ds)
         {
             DataTable dt = DBAccessor.GetDataTable("KTCD, KTNM, KTGCD, ODCD", "M0410", null, "KTCD");
             ds.Tables.Add(dt);
             ds.Tables[ds.Tables.Count - 1].TableName = "M0410";
         }
+
+        // 手配データ(D0410)の取得 (先月の1日以降の全データを取得)
+        public static DataTable GetD0410()
+        {
+            var select = "ODRNO,KTSEQ,HMCD,KTCD,ODRQTY,ODCD,NEXTODCD,EDDT,EDTIM,ODRSTS,JIQTY,DATAKBN,RETKTCD";
+            var today = DateTime.Today;
+            var baseday = new DateTime(today.Year, today.AddMonths(-4).Month, 1).ToString("yyyy/MM/dd");
+            DataTable dt = DBAccessor.GetDataTable(select,"D0410", $"EDDT>'{baseday}'", "ODRNO");
+            return dt;
+        }
+
+        public static string GetTargetDB(){ return DBAccessor.GetTargetDB(); }
 
         // ユーザID, パスワード確認
         public static ProcessErrorType CheckUserInfoValid(string username, string password)

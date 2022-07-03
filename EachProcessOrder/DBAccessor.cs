@@ -94,6 +94,11 @@ namespace EachProcessOrder
             }
         }
 
+        public static string GetTargetDB()
+        {
+            return s_DBConfigData.TargetDB;
+        }
+
         // DBオープン
         public static ProcessErrorType DBOpen()
         {
@@ -175,7 +180,7 @@ namespace EachProcessOrder
             {
                 if (s_OracleConnection != null)
                 {
-                    s_OracleConnection.Close();
+                    if (s_OracleConnection.State == ConnectionState.Open) { s_OracleConnection.Close(); }
                     s_OracleConnection = null;
                 }
                 return ProcessErrorType.None;
@@ -194,7 +199,7 @@ namespace EachProcessOrder
             {
                 if (s_MySQLConnection != null)
                 {
-                    s_MySQLConnection.Close();
+                    if (s_MySQLConnection.State == ConnectionState.Open) { s_MySQLConnection.Close(); }
                     s_MySQLConnection = null;
                 }
                 return ProcessErrorType.None;

@@ -30,6 +30,7 @@
         // メッセージ
         public static readonly string MSG_PROCESSING = "手配調査中...";
         public static readonly string MSG_APP_END_ASK = "アプリを終了しますか?";
+        public static readonly string MSG_DATA_NOT_FOUND = "データ取得出来ませんでした";
 
         // ファイル パス
         public static readonly string PATH_DELIMITER = "\\";                                     // パスのデリミタ
