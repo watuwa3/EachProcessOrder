@@ -118,14 +118,9 @@ namespace EachProcessOrder
         // Oracleデータベースのオープン処理
         private static ProcessErrorType OracleOpen(string userid, string password, string protocol, string host, int port, string servicename)
         {
-            // 挿入文字列と逐次的文字列を組み合わせた$@
-            var datasource = $@"
-                (DESCRIPTION=(ADDRESS=(PROTOCOL={protocol})(HOST={host})(PORT={port})) 
-                (CONNECT_DATA=(SERVICE_NAME={servicename})))";
-            var cnn = $@"
-                User Id={userid};
-                Password={password};
-                Data Source={datasource}";
+            // 挿入文字列と逐次的文字列を組み合わせた[$@]はやめた
+            var datasource = $"(DESCRIPTION=(ADDRESS=(PROTOCOL={protocol})(HOST={host})(PORT={port}))(CONNECT_DATA=(SERVICE_NAME={servicename})))";
+            var cnn = $"User Id={userid};Password={password};Data Source={datasource}";
             try
             {
                 s_OracleConnection = new OracleConnection();

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <DBConfigData>
-  <TargetDB>MySQL</TargetDB>
+  <TargetDB>Oracle</TargetDB>
   <!-- Oracle -->
   <UserID>KOKEN_7</UserID>         	<!-- Oracle サーバーのパスワード -->
   <Passwd>[`]XbT-</Passwd>          <!-- 暗号化パスワード -->

@@ -38,7 +38,7 @@ namespace EachProcessOrder
         public static void SetM0400(ref DataSet ds)
         {
             var where = "KTGCD in ('WL','MM','MP','BE')";
-            DataTable dt = DBAccessor.GetDataTable("KTGCD, KTGSEQ, KTGNM, KTRNM", "M0400", where,"KTGCD");
+            DataTable dt = DBAccessor.GetDataTable("KTGCD, KTGSEQ, KTGNM, KTGRNM", "M0400", where,"KTGCD");
             ds.Tables.Add(dt);
             ds.Tables[ds.Tables.Count - 1].TableName = "M0400";
         }
@@ -56,7 +56,7 @@ namespace EachProcessOrder
         {
             var select = "ODRNO,KTSEQ,HMCD,KTCD,ODRQTY,ODCD,NEXTODCD,EDDT,EDTIM,ODRSTS,JIQTY,DATAKBN,RETKTCD";
             var today = DateTime.Today;
-            var baseday = new DateTime(today.Year, today.AddMonths(-4).Month, 1).ToString("yyyy/MM/dd");
+            var baseday = new DateTime(today.Year, today.AddMonths(-1).Month, 1).ToString("yyyy/MM/dd");
             DataTable dt = DBAccessor.GetDataTable(select,"D0410", $"EDDT>'{baseday}'", "ODRNO");
             return dt;
         }

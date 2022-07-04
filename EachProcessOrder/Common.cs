@@ -20,17 +20,22 @@
         public static readonly string configFileName = "ConfigDB.xml";
         // メッセージ定義
         // タイトル
-        public static readonly string MSG_TITLE_LOGIN_WINDOW = "工程別 手配状況調査アプリ 認証画面";
-        public static readonly string MSG_TITLE_WINDOW = "工程別 手配状況調査アプリ画面";
+        public static readonly string MSG_TITLE_LOGIN_WINDOW = "手配状況調査アプリ 認証画面";
+        public static readonly string MSG_TITLE_WINDOW = "[KMD001SF] 手配状況調査アプリ画面";
         public static readonly string MSG_TITLE_SUCCESS = "調査完了";
         public static readonly string MSG_TITLE_PROCESS = "処理中";
         public static readonly string MSG_TITLE_ERROR = "エラー";
         public static readonly string MSG_TITLE_ASK = "確認";
+        public static readonly string MSG_TITLE_D0410 = "手配データ";
+        public static readonly string MSG_TITLE_DAYLY_SUMMARY = "日別集計";
+        public static readonly string MSG_TITLE_AREA_AXISY = "数量 (本数)";
 
         // メッセージ
-        public static readonly string MSG_PROCESSING = "手配調査中...";
+        public static readonly string MSG_PROCESSING = "データベースから手配データの取得中...";
         public static readonly string MSG_APP_END_ASK = "アプリを終了しますか?";
         public static readonly string MSG_DATA_NOT_FOUND = "データ取得出来ませんでした";
+        public static readonly string MSG_DEBUG_LOAD_COMPLETED = "初期フォーム表示完了";
+        public static readonly string MSG_DEBUG_D0410_READYTOGO = "手配データを取得し準備が出来ました";
 
         // ファイル パス
         public static readonly string PATH_DELIMITER = "\\";                                     // パスのデリミタ
