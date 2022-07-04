@@ -85,7 +85,8 @@ namespace EachProcessOrder
 
             // AppConfigの読込み
             LoadProcessSetting();
-
+            this.Width = 700;
+                 
             Console.WriteLine(MSG_DEBUG_LOAD_COMPLETED + ": " + DateTime.Now.ToString("mm:ss:ffff"));
         }
 
@@ -114,10 +115,17 @@ namespace EachProcessOrder
             if (IsDataTable("D0410"))
             {
                 var count = myDs.Tables["D0410"].Rows.Count.ToString("#,0");
-//                toolStatusLabel.Text = $"手配データ: {count}件を取得し準備が出来ました. ({sw.ElapsedMilliseconds}ミリ秒)";
                 toolStatusLabel.Text = $"{MSG_DEBUG_D0410_READYTOGO} : {count}件 ({sw.ElapsedMilliseconds}ミリ秒)";
             }
             else { toolStatusLabel.Text = ""; }
+            try
+            {
+                KTGCDChanged(cmbKTGCD.SelectedItem.ToString());
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show(ex.Message.ToString());
+            }
 
             Console.WriteLine(MSG_DEBUG_D0410_READYTOGO + ": " + DateTime.Now.ToString("mm:ss:ffff"));
         }
@@ -222,7 +230,9 @@ namespace EachProcessOrder
             MakeChart();
         }
 
-        // 手配データテーブルから前後10日のデータを取得してチャートに設定
+        // 手配データテーブルからチャート作成
+        // 通常：前後7日
+        // ワイド表示：前後30日
         private void MakeChart()
         {
             chart.Titles.Clear();
@@ -324,7 +334,7 @@ namespace EachProcessOrder
         // 表示する期間を通常に戻し表示
         private void dispNormalMenuItem_Click(object sender, EventArgs e)
         {
-            isNormalRange = false;
+            isNormalRange = true;
             MakeChart();
         }
 
@@ -353,7 +363,7 @@ namespace EachProcessOrder
         }
 
         // 再表示ボタン
-        private void buttonRefresh(object sender, EventArgs e)
+        private void buttonRefresh_Click(object sender, EventArgs e)
         {
             MakeChart();
         }

@@ -28,16 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint13 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(44753D, 1800D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint14 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(44754D, 2500D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint15 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(44757D, 3000D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint16 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(44758D, 2800D);
-            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint17 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(44753D, 1200D);
-            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint18 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(44754D, 800D);
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint1 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(44753D, 1800D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint2 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(44754D, 2500D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint3 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(44757D, 3000D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint4 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(44758D, 2800D);
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint5 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(44753D, 1200D);
+            System.Windows.Forms.DataVisualization.Charting.DataPoint dataPoint6 = new System.Windows.Forms.DataVisualization.Charting.DataPoint(44754D, 800D);
             this.cmbKTGCD = new System.Windows.Forms.ComboBox();
             this.chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -73,46 +73,46 @@
             this.cmbKTGCD.Location = new System.Drawing.Point(12, 48);
             this.cmbKTGCD.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cmbKTGCD.Name = "cmbKTGCD";
-            this.cmbKTGCD.Size = new System.Drawing.Size(204, 34);
+            this.cmbKTGCD.Size = new System.Drawing.Size(192, 34);
             this.cmbKTGCD.TabIndex = 0;
             this.cmbKTGCD.SelectedIndexChanged += new System.EventHandler(this.cmbKTGCD_SelectedIndexChanged);
             // 
             // chart
             // 
-            chartArea3.AxisY.Title = "本数";
-            chartArea3.Name = "ChartArea1";
-            this.chart.ChartAreas.Add(chartArea3);
-            legend3.Name = "Legend1";
-            this.chart.Legends.Add(legend3);
+            chartArea1.AxisY.Title = "本数";
+            chartArea1.Name = "ChartArea1";
+            this.chart.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.chart.Legends.Add(legend1);
             this.chart.Location = new System.Drawing.Point(12, 89);
             this.chart.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.chart.Name = "chart";
-            series5.ChartArea = "ChartArea1";
-            series5.Color = System.Drawing.Color.MediumSlateBlue;
-            series5.IsValueShownAsLabel = true;
-            series5.LabelAngle = 45;
-            series5.LabelFormat = "#,0";
-            series5.Legend = "Legend1";
-            series5.Name = "手配データ";
-            series5.Points.Add(dataPoint13);
-            series5.Points.Add(dataPoint14);
-            series5.Points.Add(dataPoint15);
-            series5.Points.Add(dataPoint16);
-            series5.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Date;
-            series5.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
-            series6.BorderWidth = 10;
-            series6.ChartArea = "ChartArea1";
-            series6.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series6.Color = System.Drawing.Color.Yellow;
-            series6.Legend = "Legend1";
-            series6.Name = "実績データ";
-            series6.Points.Add(dataPoint17);
-            series6.Points.Add(dataPoint18);
-            series6.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Date;
-            series6.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
-            this.chart.Series.Add(series5);
-            this.chart.Series.Add(series6);
-            this.chart.Size = new System.Drawing.Size(776, 406);
+            series1.ChartArea = "ChartArea1";
+            series1.Color = System.Drawing.Color.MediumSlateBlue;
+            series1.IsValueShownAsLabel = true;
+            series1.LabelAngle = 45;
+            series1.LabelFormat = "#,0";
+            series1.Legend = "Legend1";
+            series1.Name = "手配データ";
+            series1.Points.Add(dataPoint1);
+            series1.Points.Add(dataPoint2);
+            series1.Points.Add(dataPoint3);
+            series1.Points.Add(dataPoint4);
+            series1.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Date;
+            series1.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
+            series2.BorderWidth = 10;
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series2.Color = System.Drawing.Color.Yellow;
+            series2.Legend = "Legend1";
+            series2.Name = "実績データ";
+            series2.Points.Add(dataPoint5);
+            series2.Points.Add(dataPoint6);
+            series2.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Date;
+            series2.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
+            this.chart.Series.Add(series1);
+            this.chart.Series.Add(series2);
+            this.chart.Size = new System.Drawing.Size(758, 406);
             this.chart.TabIndex = 1;
             this.chart.Text = "chart";
             // 
@@ -127,7 +127,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(800, 34);
+            this.menuStrip1.Size = new System.Drawing.Size(782, 34);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -258,7 +258,7 @@
             this.statusStrip1.Location = new System.Drawing.Point(0, 499);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Padding = new System.Windows.Forms.Padding(1, 0, 13, 0);
-            this.statusStrip1.Size = new System.Drawing.Size(800, 35);
+            this.statusStrip1.Size = new System.Drawing.Size(782, 35);
             this.statusStrip1.TabIndex = 3;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -272,24 +272,24 @@
             // buttonRefresh
             // 
             this.buttonRefresh.Font = new System.Drawing.Font("游ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.buttonRefresh.Location = new System.Drawing.Point(611, 48);
+            this.buttonRefresh.Location = new System.Drawing.Point(611, 46);
             this.buttonRefresh.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonRefresh.Name = "buttonRefresh";
-            this.buttonRefresh.Size = new System.Drawing.Size(177, 36);
+            this.buttonRefresh.Size = new System.Drawing.Size(160, 36);
             this.buttonRefresh.TabIndex = 4;
             this.buttonRefresh.Text = "グラフの更新";
             this.buttonRefresh.UseVisualStyleBackColor = true;
-            this.buttonRefresh.Click += new System.EventHandler(this.buttonRefresh);
+            this.buttonRefresh.Click += new System.EventHandler(this.buttonRefresh_Click);
             // 
             // cmbKTCD
             // 
             this.cmbKTCD.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbKTCD.Font = new System.Drawing.Font("游ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.cmbKTCD.FormattingEnabled = true;
-            this.cmbKTCD.Location = new System.Drawing.Point(223, 48);
+            this.cmbKTCD.Location = new System.Drawing.Point(210, 48);
             this.cmbKTCD.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cmbKTCD.Name = "cmbKTCD";
-            this.cmbKTCD.Size = new System.Drawing.Size(382, 34);
+            this.cmbKTCD.Size = new System.Drawing.Size(395, 34);
             this.cmbKTCD.TabIndex = 5;
             this.cmbKTCD.SelectedIndexChanged += new System.EventHandler(this.cmbKTCD_SelectedIndexChanged);
             // 
@@ -297,7 +297,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 534);
+            this.ClientSize = new System.Drawing.Size(782, 534);
             this.Controls.Add(this.cmbKTCD);
             this.Controls.Add(this.buttonRefresh);
             this.Controls.Add(this.statusStrip1);
