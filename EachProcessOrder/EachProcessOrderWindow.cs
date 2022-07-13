@@ -93,11 +93,12 @@ namespace EachProcessOrder
         // データベースから非同期で手配データを取得 ⇒ DataSetへ格納
         private void GetTehaiData()
         {
+            // 手配データ取得（前月1日から来月末まで3か月間の全データ）
             var sw = Stopwatch.StartNew(); // 処理時間を計測
-            var dt = DBManager.GetD0410(); // 手配データ取得（先月1日からの来月末までの全データ）
+            var dt = DBManager.GetD0410(myToday); 
             sw.Stop();
 
-            //Thread.Sleep(3000); // Debug用
+            Thread.Sleep(3000); // Debug用
 
             // DataSetへ格納
             myDs.Tables.Add(dt);
@@ -118,14 +119,9 @@ namespace EachProcessOrder
                 toolStatusLabel.Text = $"{MSG_DEBUG_D0410_READYTOGO} : {count}件 ({sw.ElapsedMilliseconds}ミリ秒)";
             }
             else { toolStatusLabel.Text = ""; }
-            try
-            {
-                KTGCDChanged(cmbKTGCD.SelectedItem.ToString());
-            }
-            catch (Exception ex)
-            {
-                //MessageBox.Show(ex.Message.ToString());
-            }
+
+            // チャートを表示
+            MakeChart();
 
             Console.WriteLine(MSG_DEBUG_D0410_READYTOGO + ": " + DateTime.Now.ToString("mm:ss:ffff"));
         }

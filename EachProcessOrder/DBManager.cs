@@ -52,11 +52,10 @@ namespace EachProcessOrder
         }
 
         // 手配データ(D0410)の取得 (先月の1日以降の全データを取得)
-        public static DataTable GetD0410()
+        public static DataTable GetD0410(DateTime _myToday)
         {
             var select = "ODRNO,KTSEQ,HMCD,KTCD,ODRQTY,ODCD,NEXTODCD,EDDT,EDTIM,ODRSTS,JIQTY,DATAKBN,RETKTCD";
-            var today = DateTime.Today;
-            var baseday = new DateTime(today.Year, today.AddMonths(-1).Month, 1).ToString("yyyy/MM/dd");
+            var baseday = new DateTime(_myToday.Year, _myToday.AddMonths(-1).Month, 1).ToString("yyyy/MM/dd");
             DataTable dt = DBAccessor.GetDataTable(select,"D0410", $"EDDT>'{baseday}'", "ODRNO");
             return dt;
         }
