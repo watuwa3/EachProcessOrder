@@ -102,15 +102,22 @@ namespace EachProcessOrder
         // DBオープン
         public static ProcessErrorType DBOpen()
         {
-            if (s_DBConfigData.TargetDB == "Oracle")
+            DBConfigData s = s_DBConfigData;
+            if (s.TargetDB == "Oracle")
             {
-                return OracleOpen(s_DBConfigData.UserID, s_DBConfigData.DecPasswd, s_DBConfigData.Protocol,
-                    s_DBConfigData.Host, s_DBConfigData.Port, s_DBConfigData.ServiceName);
+                if (s_OracleConnection != null && s_OracleConnection.State == ConnectionState.Open)
+                {
+                    return ProcessErrorType.None; 
+                }
+                return OracleOpen(s.UserID, s.DecPasswd, s.Protocol, s.Host, s.Port, s.ServiceName);
             }
             else
             {
-                return MySQLOpen(s_DBConfigData.MyServer, s_DBConfigData.MyDatabase, s_DBConfigData.MyUser,
-                    s_DBConfigData.DecPasswd, s_DBConfigData.MyCharset);
+                if (s_MySQLConnection != null && s_MySQLConnection.State == ConnectionState.Open)
+                {
+                    return ProcessErrorType.None;
+                }
+                return MySQLOpen(s.MyServer, s.MyDatabase, s.MyUser, s.DecPasswd, s.MyCharset);
             }
             return ProcessErrorType.DatabaseConnectionFailed;
         }

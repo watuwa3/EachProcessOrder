@@ -3,16 +3,24 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // アセンブリに関する一般情報は以下の属性セットをとおして制御されます。
-// 制御されます。アセンブリに関連付けられている情報を変更するには、
+// アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更します。
 [assembly: AssemblyTitle("EachProcessOrder")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Program Version: 220701.01")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("HP Inc.")]
-[assembly: AssemblyProduct("EachProcessOrder")]
-[assembly: AssemblyCopyright("Copyright © HP Inc. 2022")]
+[assembly: AssemblyCompany("Koken Kogyo Co., Ltd.")]
+[assembly: AssemblyProduct("[KMD001SF] 手配状況調査")]
+[assembly: AssemblyCopyright("© 2022 Koken Kogyo Co., Ltd.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+
+// 製品バージョン情報（公開までは1.0.0.作成開始日 (yyMMdd)）
+//  メジャー  :下位互換性を想定できない大幅な書き換えを行った場合。
+//  マイナー  :下位互換性を目的とした大幅な機能強化を行った場合。
+//  ビルド    :同じソースコードの再コンパイルを行った場合。
+//             プロセッサ、プラットフォーム、またはコンパイラが変更されたときに、異なるビルド番号が使用される場合があります。
+//  リビジョン:機能アップではないバグ修正を行った場合。（日付をリビジョンとして使用）
+[assembly: AssemblyInformationalVersion("1.0.0.220701")]
 
 // ComVisible を false に設定すると、このアセンブリ内の型は COM コンポーネントから
 // 参照できなくなります。COM からこのアセンブリ内の型にアクセスする必要がある場合は、

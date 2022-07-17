@@ -1,16 +1,15 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-//using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Linq;
-//using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
+using Microsoft.VisualBasic;
+using System.Drawing;
 using System.Diagnostics;
-// Debug用
 using System.Threading;
 
 namespace EachProcessOrder
@@ -19,12 +18,14 @@ namespace EachProcessOrder
 
     public partial class EachProcessOrderWindow : Form
     {
-        private string s_configFileName;
+        private static string s_configFileName;
+        private static string s_KTCD;
         private static DBManager s_DBManager;
         private static DataSet myDs;
         private static bool isDBUse;
         private static bool isNormalRange;  // 表示範囲
         private static DateTime myToday;    // Debug用
+        private static Dictionary<string, int> s_DictionaryBase;
 
         public EachProcessOrderWindow()
         {
@@ -37,6 +38,8 @@ namespace EachProcessOrder
             // フォーム初期化
             toolStatusLabel.Text = "";
             this.Text = MSG_TITLE_WINDOW;
+            this.Width = 700;
+            s_DictionaryBase = new Dictionary<string, int>();
 
             // フラグ初期化
             isNormalRange = true;
@@ -50,11 +53,17 @@ namespace EachProcessOrder
             }
             s_DBManager = DBManager.GetInstance(s_configFileName);
 
-            // Debug用に設定値変更
-            if (DBManager.GetTargetDB() == "Oracle"){myToday = DateTime.Today;}
-            else {myToday = new DateTime(2022, 4, 5);}
+            // Debug用に基準値変更（データが少ないもので）
+            if (DBManager.GetTargetDB() == "Oracle")
+            {
+                myToday = DateTime.Today;
+            }
+            else
+            {
+                myToday = new DateTime(2022, 4, 5);
+            }
         }
-
+        
         // Window初期表示時処理
         private void EachProcessOrderWindow_Shown(object sender, EventArgs e)
         {
@@ -79,20 +88,36 @@ namespace EachProcessOrder
             cmbKTGCD.Items.AddRange(M0400.ToArray());
 
             // データベースから非同期で手配データを取得
-            isDBUse = true;
             toolStatusLabel.Text = MSG_PROCESSING;
             Task t = Task.Run(() => { GetTehaiData(); });
 
             // AppConfigの読込み
             LoadProcessSetting();
-            this.Width = 700;
                  
             Console.WriteLine(MSG_DEBUG_LOAD_COMPLETED + ": " + DateTime.Now.ToString("mm:ss:ffff"));
         }
 
+        public delegate void ChartUpdateDelegate();
+
         // データベースから非同期で手配データを取得 ⇒ DataSetへ格納
         private void GetTehaiData()
         {
+            // データベースオープン（再取得用）
+            if (DBManager.DBOpen() != ProcessErrorType.None)
+            {
+                MessageBox.Show(MSG_DATABESE_CONNECTION_FAILURE);
+                this.Close();
+            }
+            isDBUse = true;
+
+            // 手配データ再取得の場合
+            if (IsDataTable("D0410"))
+            {
+                var dt2 = new DataTable();
+                dt2 = myDs.Tables["D0410"];
+                if (myDs.Tables.CanRemove(dt2)) { myDs.Tables.Remove(dt2); }
+            }
+
             // 手配データ取得（前月1日から来月末まで3か月間の全データ）
             var sw = Stopwatch.StartNew(); // 処理時間を計測
             var dt = DBManager.GetD0410(myToday); 
@@ -120,8 +145,8 @@ namespace EachProcessOrder
             }
             else { toolStatusLabel.Text = ""; }
 
-            // チャートを表示
-            MakeChart();
+            // チャートを表示 (Invoke:別スレッドからのアクセスが可能となるらしい）
+            Invoke(new ChartUpdateDelegate(MakeChart));
 
             Console.WriteLine(MSG_DEBUG_D0410_READYTOGO + ": " + DateTime.Now.ToString("mm:ss:ffff"));
         }
@@ -169,10 +194,10 @@ namespace EachProcessOrder
         }
 
         // 工程ドロップダウンの再設定処理
-        private void KTGCDChanged(string ktgcd)
+        private void KTGCDChanged(string _ktgcd)
         {
             List<string> M0410 = myDs.Tables["M0410"].AsEnumerable()
-                .Where(row => row.Field<string>("KTGCD") == ktgcd.Substring(0, ktgcd.IndexOf(":")))
+                .Where(row => row.Field<string>("KTGCD") == _ktgcd.Substring(0, _ktgcd.IndexOf(":")))
                 .OrderBy(row => row.Field<string>("KTCD"))
                 .Select(row => row.Field<string>("KTCD") + ": " +
                                row.Field<string>("KTNM") + " (" + row.Field<string>("ODCD") + ")")
@@ -190,46 +215,55 @@ namespace EachProcessOrder
         // App.configから前回の工程情報を読込む
         private void LoadProcessSetting()
         {
-            var ktgidx = 0;
-            if (Int32.TryParse(ConfigurationManager.AppSettings["ktgIdx"], out ktgidx))
+            var ktgIndex = 0;
+            if (Int32.TryParse(ConfigurationManager.AppSettings["ktgIndex"], out ktgIndex))
             {
-                if (cmbKTGCD.Items.Count <= ktgidx)
-                {
-                    ktgidx = 0;
-                }
+                if (cmbKTGCD.Items.Count <= ktgIndex) { ktgIndex = 0; }
             }
-            if (cmbKTGCD.Items.Count > 0) { cmbKTGCD.SelectedIndex = ktgidx; } // イベント創出(工程データをDataTableから取得しドロップダウンに設定させる為)
+            if (cmbKTGCD.Items.Count > 0) { cmbKTGCD.SelectedIndex = ktgIndex; } // イベント創出(工程データをDataTableから取得しドロップダウンに設定させる為)
 
-            var ktidx = 0;
-            if (Int32.TryParse(ConfigurationManager.AppSettings["ktIdx"], out ktidx))
+            var ktIndex = 0;
+            if (Int32.TryParse(ConfigurationManager.AppSettings["ktIndex"], out ktIndex))
             {
-                if (cmbKTCD.Items.Count <= ktidx)
-                {
-                    cmbKTCD.SelectedIndex = 0;
-                }
+                if (cmbKTCD.Items.Count <= ktIndex) { cmbKTCD.SelectedIndex = 0; }
             }
-            if (cmbKTCD.Items.Count > 0) { cmbKTCD.SelectedIndex = ktidx; }
+            if (cmbKTCD.Items.Count > 0) { cmbKTCD.SelectedIndex = ktIndex; }
+            var process1 = ConfigurationManager.AppSettings["processBase1"].Split(':');
+            s_DictionaryBase.Add(process1[0], Int32.Parse(process1[1]));
+            var process2 = ConfigurationManager.AppSettings["processBase2"].Split(':');
+            s_DictionaryBase.Add(process2[0], Int32.Parse(process2[1]));
+            var process3 = ConfigurationManager.AppSettings["processBase3"].Split(':');
+            s_DictionaryBase.Add(process3[0], Int32.Parse(process3[1]));
         }
 
         // 今回の工程情報を保存する
         private void SaveProcessSetting()
         {
             var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            config.AppSettings.Settings["ktgIdx"].Value = cmbKTGCD.SelectedIndex.ToString();
-            config.AppSettings.Settings["ktIdx"].Value = cmbKTCD.SelectedIndex.ToString();
+            config.AppSettings.Settings["ktgIndex"].Value = cmbKTGCD.SelectedIndex.ToString();
+            config.AppSettings.Settings["ktIndex"].Value = cmbKTCD.SelectedIndex.ToString();
+            var keys = s_DictionaryBase.Keys.ToList();
+            var values = s_DictionaryBase.Values.ToList();
+            for (var i = 0; i < s_DictionaryBase.Count; i++)
+            {
+                var j = i + 1;
+                config.AppSettings.Settings["processBase" + j.ToString()].Value = keys[i] + ":" + values[i];
+            }
             config.Save();
         }
 
         // 工程変更された場合
         private void cmbKTCD_SelectedIndexChanged(object sender, EventArgs e)
         {
+            var selecteditem = cmbKTCD.SelectedItem.ToString();
+            s_KTCD = selecteditem.Substring(0, selecteditem.IndexOf(":"));
             MakeChart();
         }
 
         // 手配データテーブルからチャート作成
         // 通常：前後7日
         // ワイド表示：前後30日
-        private void MakeChart()
+        public void MakeChart()
         {
             chart.Titles.Clear();
             chart.Series.Clear();
@@ -250,14 +284,17 @@ namespace EachProcessOrder
                 todt = myToday.AddDays(+30).ToString("yyyy/MM/dd");
             }
             var selecteditem = cmbKTCD.SelectedItem.ToString();
-            var ktcd = selecteditem.Substring(0, selecteditem.IndexOf(":"));
+
+            // 工程能力値が設定されていれば取得
+            int numberOfBase = 0;
+            s_DictionaryBase.TryGetValue(s_KTCD, out numberOfBase);
 
             // DataTableから抽出～グループ化
             try
             {
                 // 件数チェック
                 if (myDs.Tables["D0410"]
-                    .Select($"KTCD='{ktcd}' and EDDT>='{fromdt}' and EDDT<='{todt}'")
+                    .Select($"KTCD='{s_KTCD}' and EDDT>='{fromdt}' and EDDT<='{todt}'")
                     .Count() == 0)
                 {
                     chart.Titles.Add($"{selecteditem}: {MSG_TITLE_D0410}なし");
@@ -268,7 +305,7 @@ namespace EachProcessOrder
                 dtChart.Columns.Add("EDDT", typeof(DateTime));
                 dtChart.Columns.Add("SUMQTY", typeof(int));
                 dtChart = myDs.Tables["D0410"]
-                    .Select($"KTCD='{ktcd}' and EDDT>='{fromdt}' and EDDT<='{todt}'")
+                    .Select($"KTCD='{s_KTCD}' and EDDT>='{fromdt}' and EDDT<='{todt}'")
                     .AsEnumerable()
                     .GroupBy(grp => new { EDDTKEY = grp.Field<DateTime>("EDDT") })
                     .Select(x =>
@@ -287,37 +324,49 @@ namespace EachProcessOrder
                 area1.AxisY.Title = MSG_TITLE_AREA_AXISY;
 
                 // Sreies
-                Series series = new Series();
-                series.LegendText = MSG_TITLE_D0410;
-                series.ChartType = SeriesChartType.Column;
-                series.XValueType = ChartValueType.DateTime;
+                Series series1 = new Series()
+                {
+                    LegendText = MSG_TITLE_D0410,
+                    ChartType = SeriesChartType.Column,
+                    XValueType = ChartValueType.DateTime,
+                    IsValueShownAsLabel = true,
+                    LabelFormat = "#,0",
+                };
+                Series series2 = new Series();
+                series2.LegendText = MSG_TITLE_NUMBER_BASE;
                 foreach (DataRow result in dtChart.Rows)
                 {
                     //取得した日付をシリアル値に変換 x.ToOADate() xは日付型
-                    series.Points.Add(new DataPoint(DateTime.Parse(
-                        result["EDDT"].ToString()).ToOADate(), Convert.ToDouble(
-                        result["SUMQTY"])));
+                    Double _eddt = DateTime.Parse(result["EDDT"].ToString()).ToOADate();
+                    series1.Points.Add(new DataPoint(_eddt, Convert.ToDouble(result["SUMQTY"])));
                 }
-
                 chart.Titles.Add($"{selecteditem}: {MSG_TITLE_DAYLY_SUMMARY}");
                 chart.ChartAreas.Add(area1);
-                chart.Series.Add(series);
+                chart.Series.Add(series1);
+
+                // 工程能力値の水平線を表示する。
+                if (numberOfBase != 0)
+                {
+                    double _base = Convert.ToDouble(numberOfBase);
+                    StripLine stlipLine = new StripLine
+                    {
+                        //Text = $"工程能力値:{mean}",
+                        //TextAlignment = StringAlignment.Near,       // テキストの水平位置（Near:左, Center:中央, Far:右）
+                        //TextLineAlignment = StringAlignment.Far,    // テキストの垂直位置（Near:下, Center:中央, Far:上）
+                        Interval = 0,                               // 線分の表示間隔 値を設定すると指定した間隔で表示される。
+                        IntervalOffset = _base,                     // 線分の表示オフセット
+                        BorderWidth = 3,
+                        BorderDashStyle = ChartDashStyle.Solid,
+                        BorderColor = Color.Orange,
+                    };
+                    chart.ChartAreas[0].AxisY.StripLines.Add(stlipLine);
+                    chart.Series.Add(series2);
+                }
             }
             catch (Exception ex)
             {
-                chart.Titles.Add($"{selecteditem}: {MSG_TITLE_D0410}なし");
+                chart.Titles.Add($"{selecteditem}: {MSG_PROGRAM_ERROR}");
             }
-
-        }
-
-        private void dispJissikiMenuItem_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("未実装");
-        }
-
-        private void dispBaseMenuItem_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("未実装");
         }
 
         // 表示する期間を長く設定し表示
@@ -343,24 +392,53 @@ namespace EachProcessOrder
         // 手配データ再取得
         private void getTehaiMenuItem_Click(object sender, EventArgs e)
         {
+            isDBUse = true;
+            toolStatusLabel.Text = MSG_PROCESSING;
+            Task t = Task.Run(() => { GetTehaiData(); });
+        }
+
+        // 製品バージョン情報の表示
+        private void varsionInfoMenuItem_Click(object sender, EventArgs e)
+        {
+            var fileVersionInfo = FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            var v = fileVersionInfo.ProductVersion;
+            MessageBox.Show(MSG_PRODUCT_VERSION + v.ToString(), MSG_TITLE_WINDOW);
+        }
+
+        // 再表示ボタン
+        private void buttonRefresh_Click(object sender, EventArgs e)
+        {
+            MakeChart();
+        }
+
+        // 実績データ取得
+        private void dispJissikiMenuItem_Click(object sender, EventArgs e)
+        {
             MessageBox.Show("未実装");
         }
 
         // 工程能力値の入力
         private void toolInputMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("未実装");
+            if (!s_DictionaryBase.ContainsKey(s_KTCD) && s_DictionaryBase.Count >= 3)
+            {
+                MessageBox.Show(MSG_OVER_BASE, MSG_TITLE_WINDOW);
+                return;
+            }
+            var str = Interaction.InputBox(MSG_INPUT_PROCESS_BASE, MSG_TITLE_WINDOW);
+            if (!Int32.TryParse(str, out int num))
+            {
+                MessageBox.Show(MSG_NOT_NUMERIC, MSG_TITLE_WINDOW);
+                return;
+            }
+            s_DictionaryBase[s_KTCD] = num;
+            MakeChart();
         }
 
-        // バージョン情報
-        private void varsionInfoMenuItem_Click(object sender, EventArgs e)
+        // 工程能力値の削除
+        private void toolDeleteMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("未実装");
-        }
-
-        // 再表示ボタン
-        private void buttonRefresh_Click(object sender, EventArgs e)
-        {
+            s_DictionaryBase.Remove(s_KTCD);
             MakeChart();
         }
     }

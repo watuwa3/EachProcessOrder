@@ -11,8 +11,8 @@ namespace EachProcessOrder
     using static Common;
     public partial class LoginWindow : Form
     {
-        private string s_configFileName;
-        private DBManager s_DBManager;
+        private static string s_configFileName;
+        private static DBManager s_DBManager;
 
         public LoginWindow()
         {
